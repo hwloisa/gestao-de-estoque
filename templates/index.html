@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f766e">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>Estoque · Creche Carolina Guilhermina Schnoor Bohianza</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%230f766e'/%3E%3Cpath d='M50 76 29 55a14 14 0 0 1 21-19 14 14 0 0 1 21 19z' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+  <symbol id="i-in" viewBox="0 0 24 24"><line x1="17" y1="7" x2="7" y2="17"/><polyline points="17 17 7 17 7 7"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></symbol>
+  <symbol id="i-trend-down" viewBox="0 0 24 24"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></symbol>
+  <symbol id="i-file-text" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
+</svg>
+
+<div class="app">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <button type="button" class="icon-btn menu-btn" id="menu-btn" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false">
+        <svg class="icon"><use href="#i-menu"/></svg>
+      </button>
+
+      <div class="brand">
+        <span class="brand-mark"><svg class="icon"><use href="#i-heart"/></svg></span>
+        <span class="brand-text">
+          <strong>Estoque da Creche</strong>
+          <small>Carolina Guilhermina Schnoor Bohianza</small>
+        </span>
+      </div>
+
+      <div class="topbar-right">
+        <span class="date-chip">
+          <svg class="icon"><use href="#i-calendar"/></svg>
+          <span id="today-label">—</span>
+        </span>
+
+        <div class="user-menu" id="user-menu">
+          <button type="button" class="user-button" id="user-button" aria-haspopup="true" aria-expanded="false" aria-controls="user-dropdown">
+            <span class="avatar">{{ current_user["display_name"][0]|upper }}</span>
+            <span class="user-name">{{ current_user["display_name"] }}</span>
+            <svg class="icon chevron"><use href="#i-chevron-down"/></svg>
+          </button>
+          <div class="user-dropdown" id="user-dropdown" hidden>
+            <div class="user-dropdown-head">
+              <span class="avatar avatar-sm">{{ current_user["display_name"][0]|upper }}</span>
+              <div>
+                <strong>{{ current_user["display_name"] }}</strong>
+                <span>@{{ current_user["username"] }}</span>
+              </div>
+            </div>
+            <button type="button" class="user-logout" data-action="logout">
+              <svg class="icon"><use href="#i-logout"/></svg>
+              Sair da conta
+            </button>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary btn-sm" data-action="go-movements">
+          <svg class="icon"><use href="#i-plus"/></svg>
+          <span>Movimentar</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="shell">
+    <aside class="sidebar" id="sidebar">
+      <nav class="nav" aria-label="Navegação principal">
+        <p class="nav-title">Menu</p>
+        <button type="button" class="nav-link is-active" data-view="painel">
+          <svg class="icon"><use href="#i-grid"/></svg>
+          <span>Painel</span>
+        </button>
+        <button type="button" class="nav-link" data-view="movimentacoes">
+          <svg class="icon"><use href="#i-swap"/></svg>
+          <span>Movimentações</span>
+        </button>
+        <button type="button" class="nav-link" data-view="itens">
+          <svg class="icon"><use href="#i-box"/></svg>
+          <span>Itens</span>
+          <span class="nav-badge" id="nav-badge" hidden>0</span>
+        </button>
+        <button type="button" class="nav-link" data-view="relatorios">
+          <svg class="icon"><use href="#i-file-text"/></svg>
+          <span>Relatórios</span>
+        </button>
+      </nav>
+
+      <div id="sidebar-alert"></div>
+
+      <div class="sidebar-foot">
+        <p>Controle de estoque · <span id="year-label">2026</span></p>
+        <p class="sidebar-school">Pedagógico &amp; Limpeza</p>
+      </div>
+    </aside>
+    <div class="nav-overlay" id="nav-overlay" hidden></div>
+
+    <main class="main">
+      <!-- ============================= PAINEL ============================= -->
+      <section class="view is-active" id="view-painel">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Visão geral</p>
+            <h1>Painel de estoque</h1>
+            <p class="page-sub">Entradas, saídas e itens que precisam de atenção em um só lugar.</p>
+          </div>
+          <button type="button" class="btn btn-ghost hide-sm" data-action="go-items">
+            <svg class="icon"><use href="#i-box"/></svg>
+            Gerenciar itens
+          </button>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <span class="stat-icon tone-teal"><svg class="icon"><use href="#i-layers"/></svg></span>
+            <p class="stat-value" id="stat-items">—</p>
+            <p class="stat-label">Itens cadastrados</p>
+            <p class="stat-foot" id="stat-items-foot">—</p>
+          </article>
+
+          <article class="stat-card">
+            <span class="stat-icon tone-blue"><svg class="icon"><use href="#i-box"/></svg></span>
+            <p class="stat-value" id="stat-stock">—</p>
+            <p class="stat-label">Total em estoque</p>
+            <p class="stat-foot">soma de todas as unidades</p>
+          </article>
+
+          <button type="button" class="stat-card is-danger stat-button" data-action="show-alerts">
+            <span class="stat-icon tone-red"><svg class="icon"><use href="#i-alert"/></svg></span>
+            <p class="stat-value" id="stat-out">—</p>
+            <p class="stat-label">Itens em falta</p>
+            <p class="stat-foot" id="stat-out-foot">estoque zerado</p>
+          </button>
+
+          <button type="button" class="stat-card is-warn stat-button" data-action="show-alerts">
+            <span class="stat-icon tone-amber"><svg class="icon"><use href="#i-trend-down"/></svg></span>
+            <p class="stat-value" id="stat-low">—</p>
+            <p class="stat-label">Abaixo da previsão</p>
+            <p class="stat-foot">reposição recomendada</p>
+          </button>
+        </div>
+
+        <div class="grid-main">
+          <section class="panel">
+            <header class="panel-head">
+              <div>
+                <h2>Entradas e saídas</h2>
+                <p class="panel-sub">Movimentações dos últimos 7 dias</p>
+              </div>
+              <div class="legend">
+                <span class="legend-item"><i class="dot dot-in"></i>Entradas</span>
+                <span class="legend-item"><i class="dot dot-out"></i>Saídas</span>
+              </div>
+            </header>
+            <div class="chart" id="chart" role="img" aria-label="Gráfico de entradas e saídas dos últimos 7 dias"></div>
+          </section>
+
+          <section class="panel">
+            <header class="panel-head">
+              <div>
+                <h2>Resumo do mês</h2>
+                <p class="panel-sub" id="month-label">—</p>
+              </div>
+            </header>
+            <div class="month-rows">
+              <div class="month-row">
+                <span class="month-icon tone-green"><svg class="icon"><use href="#i-in"/></svg></span>
+                <div>
+                  <p class="month-title">Entradas</p>
+                  <p class="month-count" id="month-in-count">—</p>
+                </div>
+                <strong class="month-value" id="month-in-qty">0</strong>
+              </div>
+              <div class="month-row">
+                <span class="month-icon tone-red"><svg class="icon"><use href="#i-out"/></svg></span>
+                <div>
+                  <p class="month-title">Saídas</p>
+                  <p class="month-count" id="month-out-count">—</p>
+                </div>
+                <strong class="month-value" id="month-out-qty">0</strong>
+              </div>
+            </div>
+            <div class="month-balance">
+              <span>Saldo do mês</span>
+              <strong id="month-balance">0</strong>
+            </div>
+          </section>
+        </div>
+
+        <div class="grid-split">
+          <section class="panel">
+            <header class="panel-head">
+              <div>
+                <h2 class="with-icon"><svg class="icon icon-alert"><use href="#i-alert"/></svg> Alertas de reposição</h2>
+                <p class="panel-sub" id="alerts-sub">Itens abaixo da previsão mensal</p>
+              </div>
+              <button type="button" class="link-btn" data-action="show-alerts">Ver todos</button>
+            </header>
+            <div class="scroll-area" id="alerts-body"></div>
+          </section>
+
+          <section class="panel">
+            <header class="panel-head">
+              <div>
+                <h2>Histórico recente</h2>
+                <p class="panel-sub">Últimas movimentações registradas</p>
+              </div>
+              <button type="button" class="link-btn" data-action="go-movements">Movimentar</button>
+            </header>
+            <div class="scroll-area" id="history-body"></div>
+          </section>
+        </div>
+      </section>
+      <!-- ========================= MOVIMENTAÇÕES ========================= -->
+      <section class="view" id="view-movimentacoes">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Registro rápido</p>
+            <h1>Movimentações</h1>
+            <p class="page-sub">Toque em <strong>+</strong> para entrada e <strong>−</strong> para saída. Cada toque registra 1 unidade.</p>
+          </div>
+        </div>
+
+        <div class="panel toolbar">
+          <div class="segmented" id="sector-switch" role="group" aria-label="Filtrar por setor">
+            <button type="button" class="is-active" data-sector="todos">
+              <svg class="icon"><use href="#i-layers"/></svg> Todos
+            </button>
+            <button type="button" data-sector="pedagogico">
+              <svg class="icon"><use href="#i-book"/></svg> Pedagógico
+            </button>
+            <button type="button" data-sector="limpeza">
+              <svg class="icon"><use href="#i-drop"/></svg> Limpeza
+            </button>
+          </div>
+
+          <label class="search-box">
+            <svg class="icon"><use href="#i-search"/></svg>
+            <input type="search" id="movement-search" placeholder="Buscar item..." aria-label="Buscar item para movimentar" autocomplete="off">
+          </label>
+        </div>
+
+        <div class="section-line">
+          <span id="movement-count">0 itens</span>
+          <span class="section-hint"><svg class="icon"><use href="#i-info"/></svg> O ajuste rápido movimenta 1 unidade por toque</span>
+        </div>
+
+        <div class="move-grid" id="movement-grid"></div>
+        <div class="empty-state" id="movement-empty" hidden>
+          <span class="empty-icon"><svg class="icon"><use href="#i-box"/></svg></span>
+          <h3>Nenhum item encontrado</h3>
+          <p>Ajuste a busca ou o setor selecionado. Para cadastrar um novo item, acesse a aba Itens.</p>
+          <button type="button" class="btn btn-ghost btn-sm" data-action="go-items">Ir para Itens</button>
+        </div>
+      </section>
+
+      <!-- ============================= ITENS ============================= -->
+      <section class="view" id="view-itens">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Cadastro</p>
+            <h1>Itens</h1>
+            <p class="page-sub">Materiais cadastrados, previsão mensal e situação do estoque.</p>
+          </div>
+          <button type="button" class="btn btn-primary" data-action="new-item">
+            <svg class="icon"><use href="#i-plus"/></svg>
+            Novo item
+          </button>
+        </div>
+
+        <div class="panel filter-bar">
+          <label class="search-box">
+            <svg class="icon"><use href="#i-search"/></svg>
+            <input type="search" id="item-search" placeholder="Buscar item..." aria-label="Buscar item" autocomplete="off">
+          </label>
+          <select id="item-sector" aria-label="Filtrar por setor">
+            <option value="">Todos os setores</option>
+            <option value="pedagogico">Pedagógico</option>
+            <option value="limpeza">Limpeza</option>
+          </select>
+          <label class="check-box">
+            <input type="checkbox" id="item-only-low">
+            <span>Somente alertas</span>
+          </label>
+          <button type="button" class="link-btn" id="clear-item-filters">Limpar filtros</button>
+        </div>
+
+        <div class="panel table-panel">
+          <div class="table-meta">
+            <span id="items-count">0 itens</span>
+            <span class="legend-item"><i class="dot dot-danger"></i>Itens abaixo da previsão ficam em vermelho</span>
+          </div>
+
+          <div class="item-row item-row-head" aria-hidden="true">
+            <span>Item</span>
+            <span>Setor</span>
+            <span>Previsão</span>
+            <span>Estoque</span>
+            <span>Status</span>
+            <span></span>
+          </div>
+
+          <div id="items-list"></div>
+
+          <div class="empty-state" id="items-empty" hidden>
+            <span class="empty-icon"><svg class="icon"><use href="#i-box"/></svg></span>
+            <h3>Nenhum item para mostrar</h3>
+            <p>Cadastre o primeiro item ou ajuste os filtros para encontrar o que procura.</p>
+            <button type="button" class="btn btn-primary btn-sm" data-action="new-item">Cadastrar item</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================== RELATÓRIOS ========================== -->
+      <section class="view" id="view-relatorios">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Prestação de contas</p>
+            <h1>Relatórios</h1>
+            <p class="page-sub">Exporte o estoque em Excel para enviar à prefeitura ou importe uma planilha já preenchida. Cada setor tem sua própria aba.</p>
+          </div>
+          <div class="page-actions">
+            <button type="button" class="btn btn-ghost" data-action="download-template">
+              <svg class="icon"><use href="#i-file-text"/></svg>
+              Baixar modelo
+            </button>
+            <button type="button" class="btn btn-primary" data-action="export-report">
+              <svg class="icon"><use href="#i-download"/></svg>
+              Exportar Excel
+            </button>
+          </div>
+        </div>
+
+        <div class="report-grid">
+          <section class="panel report-panel">
+            <header class="panel-head report-head">
+              <div>
+                <h2 class="with-icon"><svg class="icon"><use href="#i-file-text"/></svg> Prévia do relatório</h2>
+                <p class="panel-sub" id="report-count">0 itens</p>
+              </div>
+              <div class="segmented segmented-sm" id="report-sector" role="group" aria-label="Filtrar relatório por setor">
+                <button type="button" class="is-active" data-sector="todos">Todos</button>
+                <button type="button" data-sector="pedagogico">Pedagógico</button>
+                <button type="button" data-sector="limpeza">Limpeza</button>
+              </div>
+            </header>
+
+            <div class="report-table">
+              <div class="report-row report-row-head" aria-hidden="true">
+                <span>N</span>
+                <span>Materiais</span>
+                <span>Setor</span>
+                <span>Como solicitar (unidade)</span>
+                <span>Previsão mensal</span>
+                <span>Estoque</span>
+              </div>
+              <div id="report-list"></div>
+              <div class="empty-state" id="report-empty" hidden>
+                <span class="empty-icon"><svg class="icon"><use href="#i-file-text"/></svg></span>
+                <h3>Nenhum item no relatório</h3>
+                <p>Cadastre itens ou troque o setor selecionado para gerar o relatório.</p>
+                <button type="button" class="btn btn-ghost btn-sm" data-action="go-items">Ir para Itens</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel import-panel">
+            <header class="panel-head">
+              <div>
+                <h2 class="with-icon"><svg class="icon"><use href="#i-upload"/></svg> Importar planilha</h2>
+                <p class="panel-sub">Atualize o estoque a partir de um arquivo .xlsx</p>
+              </div>
+            </header>
+            <div class="import-body">
+              <div class="field">
+                <label for="import-sector">Setor padrão</label>
+                <select id="import-sector">
+                  <option value="">Detectar pela planilha</option>
+                  <option value="pedagogico">Pedagógico</option>
+                  <option value="limpeza">Limpeza</option>
+                </select>
+                <small class="field-hint">Usado quando a planilha não identificar o setor pela aba ou pelo título.</small>
+              </div>
+
+              <label class="file-drop" for="import-file">
+                <svg class="icon"><use href="#i-upload"/></svg>
+                <strong>Selecionar planilha</strong>
+                <span id="import-file-name">Nenhum arquivo selecionado</span>
+                <input type="file" id="import-file" accept=".xlsx">
+              </label>
+
+              <button type="button" class="btn btn-primary btn-block" data-action="import-report" id="import-submit">
+                <svg class="icon"><use href="#i-upload"/></svg>
+                Importar planilha
+              </button>
+
+              <div class="import-result" id="import-result" hidden></div>
+
+              <p class="import-hint">
+                <svg class="icon"><use href="#i-info"/></svg>
+                A importação identifica os itens pelo <strong>nome do material</strong> (a coluna N é ignorada). Unidades aceitas: Unidade, Caixa, Saco, Fardo, Resma, Litro, Par, Maço, Pacote e Frasco.
+              </p>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+<dialog class="modal" id="dialog-item" aria-labelledby="item-dialog-title">
+  <form id="form-item">
+    <header class="modal-head">
+      <div>
+        <p class="eyebrow">Cadastro</p>
+        <h2 id="item-dialog-title">Novo item</h2>
+      </div>
+      <button type="button" class="icon-btn" data-close aria-label="Fechar">
+        <svg class="icon"><use href="#i-x"/></svg>
+      </button>
+    </header>
+    <div class="modal-body">
+      <input type="hidden" id="item-id">
+      <div class="field">
+        <label for="item-name">Nome do item</label>
+        <input id="item-name" type="text" required maxlength="120" placeholder="Ex.: Lenço umedecido" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Categoria</label>
+        <div class="segmented sector-select" id="item-category-group" role="group" aria-label="Categoria do item">
+          <button type="button" class="is-active" data-value="pedagogico">
+            <svg class="icon"><use href="#i-book"/></svg> Pedagógica
+          </button>
+          <button type="button" data-value="limpeza">
+            <svg class="icon"><use href="#i-drop"/></svg> Limpeza
+          </button>
+        </div>
+        <input type="hidden" id="item-category-sector" value="pedagogico">
+      </div>
+      <div class="field">
+        <label for="item-unit">Unidade de medida</label>
+        <select id="item-unit" required></select>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="item-forecast">Previsão mensal</label>
+          <input id="item-forecast" type="number" min="0" step="any" value="0" inputmode="decimal">
+          <small class="field-hint">Quantidade estimada para o mês.</small>
+        </div>
+        <div class="field" id="field-initial">
+          <label for="item-initial">Saldo inicial</label>
+          <input id="item-initial" type="number" min="0" step="any" value="0" inputmode="decimal">
+          <small class="field-hint">Gera uma entrada de saldo inicial.</small>
+        </div>
+      </div>
+      <p class="form-error" id="item-error" hidden></p>
+    </div>
+    <footer class="modal-foot">
+      <button type="button" class="btn btn-ghost" data-close>Cancelar</button>
+      <button type="submit" class="btn btn-primary" id="item-submit">Salvar item</button>
+    </footer>
+  </form>
+</dialog>
+
+<dialog class="modal" id="dialog-movement" aria-labelledby="movement-dialog-title">
+  <form id="form-movement">
+    <header class="modal-head">
+      <div>
+        <p class="eyebrow">Movimentação</p>
+        <h2 id="movement-dialog-title">Registrar movimentação</h2>
+      </div>
+      <button type="button" class="icon-btn" data-close aria-label="Fechar">
+        <svg class="icon"><use href="#i-x"/></svg>
+      </button>
+    </header>
+    <div class="modal-body">
+      <input type="hidden" id="movement-item-id">
+      <div class="movement-summary">
+        <div>
+          <p class="summary-name" id="movement-item-name">—</p>
+          <p class="summary-sub">Estoque atual</p>
+        </div>
+        <strong id="movement-stock">—</strong>
+      </div>
+      <div class="field">
+        <label>Tipo de movimentação</label>
+        <div class="type-toggle" id="movement-type-group" role="group" aria-label="Tipo de movimentação">
+          <button type="button" class="is-active" data-value="entrada">
+            <svg class="icon"><use href="#i-in"/></svg> Entrada
+          </button>
+          <button type="button" data-value="saida">
+            <svg class="icon"><use href="#i-out"/></svg> Saída
+          </button>
+        </div>
+        <input type="hidden" id="movement-type" value="entrada">
+      </div>
+      <div class="field-row field-row-wide">
+        <div class="field">
+          <label for="movement-quantity">Quantidade</label>
+          <input id="movement-quantity" type="number" min="0.001" step="any" value="1" required inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="movement-note">Observação (opcional)</label>
+          <input id="movement-note" type="text" maxlength="200" placeholder="Ex.: doação, consumo da semana..." autocomplete="off">
+        </div>
+      </div>
+      <p class="form-error" id="movement-error" hidden></p>
+    </div>
+    <footer class="modal-foot">
+      <button type="button" class="btn btn-ghost" data-close>Cancelar</button>
+      <button type="submit" class="btn btn-primary" id="movement-submit">Registrar</button>
+    </footer>
+  </form>
+</dialog>
+
+<dialog class="modal modal-sm" id="dialog-confirm" aria-labelledby="confirm-title">
+  <div class="modal-head">
+    <div>
+      <p class="eyebrow">Confirmação</p>
+      <h2 id="confirm-title">Excluir item?</h2>
+    </div>
+    <button type="button" class="icon-btn" data-close aria-label="Fechar">
+      <svg class="icon"><use href="#i-x"/></svg>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p class="confirm-text" id="confirm-message"></p>
+  </div>
+  <footer class="modal-foot">
+    <button type="button" class="btn btn-ghost" id="confirm-cancel">Cancelar</button>
+    <button type="button" class="btn btn-danger" id="confirm-button">Excluir</button>
+  </footer>
+</dialog>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

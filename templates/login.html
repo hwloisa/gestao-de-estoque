@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f766e">
+  <title>Acesso restrito · Estoque da Creche</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%230f766e'/%3E%3Cpath d='M50 76 29 55a14 14 0 0 1 21-19 14 14 0 0 1 21 19z' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="login-page" data-mode="{{ mode }}">
+
+<svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="i-alert-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></symbol>
+</svg>
+
+<main class="login-shell">
+  <aside class="login-brand">
+    <div class="login-brand-top">
+      <span class="brand-mark"><svg class="icon"><use href="#i-heart"/></svg></span>
+      <span class="login-brand-name">Estoque da Creche</span>
+    </div>
+
+    <div class="login-brand-copy">
+      <p class="eyebrow eyebrow-light">Acesso restrito</p>
+      <h1>Creche Carolina Guilhermina Schnoor Bohianza</h1>
+      <p class="login-brand-text">Um lugar seguro para acompanhar os materiais pedagógicos e de limpeza, registrar movimentações e repor o que falta.</p>
+    </div>
+
+    <ul class="login-features">
+      <li>
+        <span class="login-feature-icon"><svg class="icon"><use href="#i-book"/></svg></span>
+        <span>Materiais pedagógicos organizados por categoria</span>
+      </li>
+      <li>
+        <span class="login-feature-icon"><svg class="icon"><use href="#i-drop"/></svg></span>
+        <span>Controle dos produtos de limpeza e higiene</span>
+      </li>
+      <li>
+        <span class="login-feature-icon"><svg class="icon"><use href="#i-alert"/></svg></span>
+        <span>Alertas de reposição com base na previsão mensal</span>
+      </li>
+    </ul>
+
+    <div class="login-brand-foot">
+      <svg class="icon"><use href="#i-shield"/></svg>
+      <span>Ambiente protegido por autenticação</span>
+    </div>
+  </aside>
+
+  <section class="login-panel">
+    <div class="login-panel-inner">
+      <div class="login-mobile-brand">
+        <span class="brand-mark"><svg class="icon"><use href="#i-heart"/></svg></span>
+        <div>
+          <strong>Estoque da Creche</strong>
+          <span>Carolina Guilhermina Schnoor Bohianza</span>
+        </div>
+      </div>
+
+      <p class="eyebrow">{% if mode == "setup" %}Primeiro acesso{% else %}Bem-vindo de volta{% endif %}</p>
+      <h2>{% if mode == "setup" %}Crie a conta de administrador{% else %}Acesse o sistema{% endif %}</h2>
+      <p class="login-sub">
+        {% if mode == "setup" %}
+          Nenhuma conta existe ainda. Defina o acesso da pessoa responsável pelo estoque.
+        {% else %}
+          Informe seu usuário e senha para continuar. Nenhuma alteração é permitida sem login.
+        {% endif %}
+      </p>
+
+      {% if message %}
+      <div class="login-message" role="status">
+        <svg class="icon"><use href="#i-info"/></svg>
+        <span>{{ message }}</span>
+      </div>
+      {% endif %}
+
+      <form id="login-form" class="login-form" novalidate>
+        {% if mode == "setup" %}
+        <div class="field">
+          <label for="display-name">Nome do responsável</label>
+          <input id="display-name" name="display_name" type="text" autocomplete="name" required maxlength="80" placeholder="Ex.: Maria Silva">
+        </div>
+        {% endif %}
+
+        <div class="field">
+          <label for="username">Usuário</label>
+          <input id="username" name="username" type="text" autocomplete="username" required maxlength="32" placeholder="seu.usuario" autocapitalize="none" spellcheck="false" autofocus>
+        </div>
+
+        <div class="field">
+          <label for="password">Senha</label>
+          <div class="password-wrap">
+            <input id="password" name="password" type="password" autocomplete="{% if mode == "setup" %}new-password{% else %}current-password{% endif %}" required minlength="8" placeholder="Mínimo de 8 caracteres">
+            <button type="button" class="toggle-password" id="toggle-password" aria-label="Mostrar senha" aria-controls="password">
+              <svg class="icon"><use href="#i-eye"/></svg>
+            </button>
+          </div>
+          {% if mode == "setup" %}
+          <small class="field-hint">Use pelo menos 8 caracteres e guarde a senha em local seguro.</small>
+          {% endif %}
+        </div>
+
+        {% if mode == "setup" %}
+        <div class="field">
+          <label for="password-confirm">Confirmar senha</label>
+          <input id="password-confirm" name="password_confirm" type="password" autocomplete="new-password" required minlength="8" placeholder="Repita a senha">
+        </div>
+        {% endif %}
+
+        <p class="form-error login-error" id="login-error" hidden></p>
+
+        <button type="submit" class="btn btn-primary login-submit" id="login-submit">
+          <span>{% if mode == "setup" %}Criar conta e entrar{% else %}Entrar{% endif %}</span>
+          <svg class="icon"><use href="#i-arrow-right"/></svg>
+        </button>
+      </form>
+
+      <p class="login-help">
+        {% if mode == "setup" %}
+          Esta será a conta administradora do sistema. Não compartilhe a senha.
+        {% else %}
+          Apenas pessoas autorizadas da creche devem acessar este sistema.
+        {% endif %}
+      </p>
+
+      <p class="login-footer">© <span id="year">2026</span> Creche Carolina Guilhermina Schnoor Bohianza</p>
+    </div>
+  </section>
+</main>
+
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+</body>
+</html>
