@@ -6,7 +6,7 @@ Aplicação web responsiva para controlar o estoque de materiais pedagógicos e 
 
 - **Painel geral** com itens cadastrados, total em estoque, itens em falta, itens abaixo da previsão mensal, resumo de entradas e saídas do mês e histórico recente.
 - **Alertas de reposição**: todo item com estoque menor que a previsão mensal fica destacado em vermelho, no painel e na listagem.
-- **Cadastro de itens**: nome, categoria, unidade de medida, previsão mensal e saldo inicial opcional. As categorias são fixas: **Pedagógica** e **Limpeza** — não é preciso criar categoria antes de cadastrar um item.
+- **Cadastro de itens**: nome, categoria, unidade de medida, previsão mensal e saldo inicial opcional. As categorias são fixas: **Pedagógica** e **Limpeza** — não é preciso criar categoria antes de cadastrar um item. Não é permitido repetir o mesmo nome dentro do mesmo setor.
 - **Unidades de medida**: Unidade, Caixa, Saco, Fardo, Resma, Litro, Par, Maço, Pacote e Frasco.
 - **Relatórios em Excel**: prévia do estoque por setor, exportação no formato oficial da prefeitura, modelo de planilha para download e importação de planilhas `.xlsx`.
 - **Registro de movimentações** com botões rápidos **+ / −** (1 unidade por toque), filtro rápido por setor, busca e registro detalhado com quantidade e observação.
@@ -33,6 +33,7 @@ Cada aba do arquivo representa um setor e segue exatamente este layout:
 - Com o filtro **Todos**, o arquivo tem uma aba por setor. Se um setor estiver sem itens, a aba dele fica vazia e a aba com dados vem primeiro.
 - Se não houver nenhum item, a exportação é recusada com uma mensagem clara em vez de gerar um arquivo vazio.
 - **Baixar modelo** entrega o mesmo layout com exemplos e uma aba **Instruções**.
+- Nomes de itens que começam com `=`, `+`, `-` ou `@` são gravados como texto no Excel, evitando que sejam interpretados como fórmulas.
 
 ### Importação
 
@@ -86,7 +87,8 @@ Na próxima abertura, o modo de primeiro acesso volta a aparecer.
 | --- | --- |
 | `SECRET_KEY` | Chave que assina o cookie de sessão. Se não for definida, o sistema gera e guarda uma em `.secret_key`. |
 | `SESSION_COOKIE_SECURE=1` | Envia o cookie de sessão apenas por HTTPS. **Ative em produção.** |
-| `ESTOQUE_DB_PATH` | Caminho completo de outro arquivo SQLite. Útil para testes e QA sem afetar os dados reais. |
+| `ESTOQUE_DB_PATH` | Caminho completo do banco. Em produção, use uma pasta de dados, por exemplo `D:\GestaoDeEstoque\dados\estoque.db`. |
+| `SEED_DEMO_DATA=1` | Cria itens de exemplo na primeira execução. Sem essa variável, o banco começa vazio. |
 | `FLASK_DEBUG=1` | Ativa o modo debug do Flask. Use apenas em desenvolvimento local. |
 | `PORT` | Porta do servidor local. Padrão: `5000`. |
 
@@ -130,9 +132,56 @@ python app.py
 
 Abra o navegador em <http://127.0.0.1:5000>. Na primeira vez, o sistema pede a criação da conta de administrador (veja [Acesso e segurança](#acesso-e-segurança)).
 
-> Na primeira execução, o banco é criado com as duas categorias fixas e itens de exemplo para facilitar a visualização. Para começar do zero, pare o servidor, apague o banco da pasta local (ou defina `ESTOQUE_DB_PATH` para um arquivo novo) e inicie novamente — as categorias e os itens de exemplo serão recriados. Para manter um banco vazio, remova a chamada `seed_database(connection)` em `init_db()` no `app.py`.
+> Na primeira execução, o banco é criado **vazio**, com as duas categorias fixas. Para carregar dados de exemplo, defina `SEED_DEMO_DATA=1` antes de iniciar. Em produção, não defina essa variável: cadastre os itens reais ou importe as planilhas da creche.
 >
 > Bancos criados por versões anteriores são ajustados automaticamente na inicialização: os itens são movidos para a categoria fixa do seu setor e as categorias extras são removidas, mantendo apenas **Pedagógica** e **Limpeza**.
+
+## Colocar em uso na creche
+
+O sistema e o banco precisam ficar em um computador que permaneça ligado e acessível para a equipe. O banco **não fica no seu PC**.
+
+### Opção recomendada: mini PC na creche
+
+1. Instale Python 3.12 e Git no mini PC.
+2. Clone o repositório e instale as dependências:
+
+```powershell
+git clone https://github.com/SEU-USUARIO/gestao-de-estoque.git
+cd gestao-de-estoque
+py -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+3. Defina o local do banco e uma chave de sessão (uma única vez, no sistema ou no script de inicialização):
+
+```powershell
+$env:ESTOQUE_DB_PATH = "D:\GestaoDeEstoque\dados\estoque.db"
+$env:SECRET_KEY = "uma-chave-longa-e-aleatoria"
+$env:SESSION_COOKIE_SECURE = "0"
+```
+
+Use `SESSION_COOKIE_SECURE=1` somente quando o acesso for por HTTPS.
+
+4. Inicie com o servidor de produção Waitress:
+
+```powershell
+.venv\Scripts\waitress-serve.exe --host=0.0.0.0 --port=5000 app:app
+```
+
+5. Descubra o IP do mini PC com `ipconfig` e reserve esse IP no roteador.
+6. Em outro celular ou computador da mesma rede, acesse `http://IP-DO-MINI-PC:5000`.
+7. Faça o primeiro acesso e importe as planilhas reais em **Relatórios**.
+
+Para iniciar junto com o Windows, crie uma Tarefa Agendada com gatilho **Ao iniciar** executando o comando do Waitress. Não use `python app.py` em produção: ele é o servidor de desenvolvimento.
+
+### Opção 2: servidor na nuvem (VPS)
+
+Se não houver um computador que possa ficar ligado na creche, use um VPS com disco persistente. A instalação é a mesma, mas o acesso deve ser publicado com domínio e HTTPS por meio de Caddy ou Nginx. Para acesso remoto sem abrir portas do roteador, use Tailscale ou Cloudflare Tunnel.
+
+### Backup
+
+O SQLite é um arquivo único. Configure uma cópia diária do banco para um HD externo ou para a nuvem e mantenha pelo menos 7 cópias. Nunca sincronize o banco ativo diretamente pelo OneDrive.
 
 ## Estrutura do projeto
 

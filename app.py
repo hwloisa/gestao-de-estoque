@@ -515,7 +515,7 @@ def init_db():
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA foreign_keys = ON")
     connection.executescript(SCHEMA)
-    if first_time:
+    if first_time and os.environ.get("SEED_DEMO_DATA") == "1":
         seed_database(connection)
     normalize_fixed_categories(connection)
     connection.commit()
@@ -573,6 +573,21 @@ def fetch_item(connection, item_id):
         (item_id,),
     ).fetchone()
     return serialize_item(row) if row else None
+
+
+def find_duplicate_item(connection, name, sector, exclude_id=None):
+    """Procura outro item com o mesmo nome no mesmo setor."""
+    query = """
+        SELECT i.id, i.name
+        FROM items i
+        JOIN categories c ON c.id = i.category_id
+        WHERE c.sector = ? AND i.name = ? COLLATE NOCASE
+    """
+    params = [sector, name]
+    if exclude_id is not None:
+        query += " AND i.id <> ?"
+        params.append(exclude_id)
+    return connection.execute(query, params).fetchone()
 
 
 def serialize_movement(row):
@@ -969,6 +984,23 @@ def parse_import_number(value):
     return round(number, 3)
 
 
+EXCEL_TEXT_PREFIXES = ("=", "+", "-", "@", "\t", "\r", "\n")
+
+
+def write_excel_text(cell, value):
+    """Grava texto sem permitir que o Excel o interprete como fórmula.
+
+    O ``quotePrefix`` é o mesmo recurso usado pelo Excel quando o usuário
+    digita um apóstrofo antes do conteúdo: a célula continua sendo texto e o
+    apóstrofo não aparece na planilha.
+    """
+    text = "" if value is None else str(value)
+    cell.value = text
+    cell.data_type = "s"
+    if text.startswith(EXCEL_TEXT_PREFIXES):
+        cell.quotePrefix = True
+
+
 def fill_official_sheet(sheet, sector, items, month_label):
     """Monta uma aba no formato oficial enviado à prefeitura."""
     title = REPORT_SECTOR_TITLES[sector]
@@ -979,20 +1011,20 @@ def fill_official_sheet(sheet, sector, items, month_label):
     sheet.merge_cells("A2:D2")
     sheet.merge_cells("A3:E3")
 
-    sheet["A1"] = REPORT_LINE_1
-    sheet["A2"] = title
-    sheet["E2"] = f"MÊS: {month_label}"
-    sheet["A3"] = REPORT_SCHOOL_LINE
+    write_excel_text(sheet["A1"], REPORT_LINE_1)
+    write_excel_text(sheet["A2"], title)
+    write_excel_text(sheet["E2"], f"MÊS: {month_label}")
+    write_excel_text(sheet["A3"], REPORT_SCHOOL_LINE)
 
     for column, header in enumerate(REPORT_HEADERS, start=1):
-        sheet.cell(row=4, column=column, value=header)
+        write_excel_text(sheet.cell(row=4, column=column), header)
 
     for position, item in enumerate(items, start=1):
         row = 4 + position
         unit = normalize_unit_label(item.get("unit")) or item.get("unit") or ""
         sheet.cell(row=row, column=1, value=position)
-        sheet.cell(row=row, column=2, value=item.get("name") or "")
-        sheet.cell(row=row, column=3, value=unit)
+        write_excel_text(sheet.cell(row=row, column=2), item.get("name") or "")
+        write_excel_text(sheet.cell(row=row, column=3), unit)
         sheet.cell(row=row, column=4, value=item.get("monthly_forecast") or 0)
         sheet.cell(row=row, column=5, value=item.get("quantity") or 0)
 
@@ -1310,6 +1342,12 @@ def api_create_item():
     connection = get_db()
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with connection:
+        duplicate = find_duplicate_item(connection, name, category["sector"])
+        if duplicate is not None:
+            raise ApiError(
+                f"Já existe um item com esse nome no setor {SECTORS[category['sector']]}.",
+                409,
+            )
         cursor = connection.execute(
             """
             INSERT INTO items (name, category_id, unit, monthly_forecast, quantity, created_at)
@@ -1338,6 +1376,14 @@ def api_update_item(item_id):
     if fetch_item(connection, item_id) is None:
         raise ApiError("Item não encontrado.", 404)
     with connection:
+        duplicate = find_duplicate_item(
+            connection, name, category["sector"], exclude_id=item_id
+        )
+        if duplicate is not None:
+            raise ApiError(
+                f"Já existe um item com esse nome no setor {SECTORS[category['sector']]}.",
+                409,
+            )
         connection.execute(
             """
             UPDATE items
