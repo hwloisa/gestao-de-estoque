@@ -223,28 +223,3 @@ Exceto `/api/login`, `/api/setup` e os arquivos estáticos, todas as rotas exige
 
 O cadastro de uma saída valida o estoque disponível. As categorias são fixas e não podem ser criadas, editadas ou excluídas pela interface.
 
-## Publicar no GitHub
-
-O repositório já está preparado para publicação: o `.gitignore` mantém banco, chave de sessão, caches e exportações fora do Git.
-
-1. Configure sua identidade no Git (uma única vez):
-
-```powershell
-git config --global user.name "Seu Nome"
-git config --global user.email "seu-email@exemplo.com"
-```
-
-2. Crie um repositório **vazio** em <https://github.com/new>. Não marque README, `.gitignore` nem licença.
-
-3. Envie o projeto:
-
-```powershell
-git remote add origin https://github.com/SEU-USUARIO/gestao-de-estoque.git
-git push -u origin main
-```
-
-Na primeira vez, o Git Credential Manager abre o navegador para autenticar. Se a conta usar verificação em duas etapas, use um **Personal Access Token** no lugar da senha. Também é possível usar SSH.
-
-4. Para dar acesso ao QA, use **Settings → Collaborators** e envie o link do repositório. Ele poderá clonar, executar e validar o sistema.
-
-> Evite manter o repositório Git dentro do OneDrive. A sincronização pode conflitar com a pasta `.git`. Se possível, mova o projeto para uma pasta local, como `C:\dev\gestao-de-estoque`, antes de continuar usando o Git.
